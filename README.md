@@ -15,7 +15,7 @@ five repeats. That sort of thing.
 
 A series of three brief tones will preceed each transition, with a
 slightly longer tone indicating the start of each phase. The tone for
-the start of the one phase is higher than the tone for the start of
+the start of the on phase is higher than the tone for the start of
 the off phase. A series of six tones indicates the end of the last
 iteration.
 
