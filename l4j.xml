@@ -1,6 +1,6 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
-  <headerType>gui</headerType>
+  <headerType>console</headerType>
   <jar>target\timekeeper-0.1.0-SNAPSHOT-standalone.jar</jar>
   <outfile>timekeeper.exe</outfile>
   <errTitle></errTitle>
