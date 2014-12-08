@@ -7,13 +7,14 @@
   "Returns a clip of sound that's a pure sine wave of frequency `freq`
   Hertz of duration `duration` seconds, with the envelope describe by
   `attack`, `sustain`, and `decay`."
-  [freq duration attack sustain decay]
+  [freq duration attack sustain decay gain]
   (-> (dynne/sinusoid duration freq)
       (dynne/envelope (dynne/segmented-linear 1
                                               0.0 attack
                                               1.0 sustain
                                               1.0 decay
-                                              0.0))))
+                                              0.0))
+      (dynne/gain gain)))
 
 (defn play
   "Plays a clip"
@@ -26,11 +27,11 @@
   First, waits `delay` seconds. Then `iterations` times in a row,
   alternates between on periods of length `on` and `off` periods of
   length `off`."
-  [delay on off iterations]
-  (let [countdown (make-sin-clip 440.0 0.1 0.01 0.08 0.01)
-        start (make-sin-clip 660.0 0.5 0.01 0.48 0.01)
-        stop (make-sin-clip 330.0 0.5 0.01 0.48 0.01)
-        done (mapv #(make-sin-clip % 0.1 0.01 0.08 0.01) [440.0 660.0 440.0
+  [delay on off iterations gain]
+  (let [countdown (make-sin-clip 440.0 0.1 0.01 0.08 0.01 gain)
+        start (make-sin-clip 660.0 0.5 0.01 0.48 0.01 gain)
+        stop (make-sin-clip 330.0 0.5 0.01 0.48 0.01 gain)
+        done (mapv #(make-sin-clip % 0.1 0.01 0.08 0.01 gain) [440.0 660.0 440.0
                                                           550.0 450.0 880.0])]
     (Thread/sleep (* 1000 delay))
     (dotimes [i iterations]
@@ -50,10 +51,19 @@
       (play clip)
       (Thread/sleep 200))))
 
+(defn db->gain
+  "Convert decibels to a power shift"
+  [db]
+  (as-> db ?
+        (/ ? 10)
+        (Math/pow 10 ?)))
+
 (defn -main
   [& args]
-  (let [[delay on off iterations] args]
+  (let [[delay on off iterations volume] args]
    (timer (Long/parseLong delay)
           (Long/parseLong on)
           (Long/parseLong off)
-          (Long/parseLong iterations))))
+          (Long/parseLong iterations)
+          (-> volume Long/parseLong db->gain)))
+  (shutdown-agents))
