@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Usage:
+# run --iterations 6 --on 40 --off 20 --delay 10
+
+ITERATIONS=6
+ON=40
+OFF=20
+DELAY=0
+VOLUME=-6
+
+while [[ $# > 1 ]]
+do
+    key="$1"
+    shift
+
+    case $key in
+        -i|--iterations)
+            ITERATIONS="$1"
+            shift
+            ;;
+        --on)
+            ON="$1"
+            shift
+            ;;
+        --off)
+            OFF="$1"
+            shift
+            ;;
+        -d|--delay)
+            DELAY="$1"
+            shift
+            ;;
+        -v|--volume)
+            VOLUME="$1"
+            shift
+            ;;
+        *)
+            echo "Huh?"
+            exit
+            ;;
+    esac
+done
+
+CP=`lein classpath`
+echo "running with delay $DELAY, on for $ON, off for $OFF, $ITERATIONS iterations, volume ${VOLUME}dB"
+java -cp $CP clojure.main -m timekeeper.main $DELAY $ON $OFF $ITERATIONS $VOLUME
