@@ -32,20 +32,20 @@
         start (make-sin-clip 660.0 0.5 0.01 0.48 0.01 gain)
         stop (make-sin-clip 330.0 0.5 0.01 0.48 0.01 gain)
         done (mapv #(make-sin-clip % 0.1 0.01 0.08 0.01 gain) [440.0 660.0 440.0
-                                                          550.0 450.0 880.0])]
+                                                               550.0 450.0 880.0])]
     (Thread/sleep (* 1000 delay))
     (dotimes [i iterations]
-     (dotimes [_ 3]
-       (play countdown)
-       (Thread/sleep 1000))
-     (play start)
-     (Thread/sleep (* 1000 (- on 3)))
-     (dotimes [_ 3]
-       (play countdown)
-       (Thread/sleep 1000))
-     (play stop)
-     (when-not (= i (dec iterations))
-      (Thread/sleep (* 1000 (- off 3)))))
+      (dotimes [_ 3]
+        (play countdown)
+        (Thread/sleep 1000))
+      (play start)
+      (Thread/sleep (* 1000 (- on 3)))
+      (dotimes [_ 3]
+        (play countdown)
+        (Thread/sleep 1000))
+      (play stop)
+      (when-not (= i (dec iterations))
+        (Thread/sleep (* 1000 (- off 3)))))
     (Thread/sleep 1000)
     (doseq [clip done]
       (play clip)
@@ -61,9 +61,9 @@
 (defn -main
   [& args]
   (let [[delay on off iterations volume] args]
-   (timer (Long/parseLong delay)
-          (Long/parseLong on)
-          (Long/parseLong off)
-          (Long/parseLong iterations)
-          (-> volume Long/parseLong db->gain)))
+    (timer (Long/parseLong delay)
+           (Long/parseLong on)
+           (Long/parseLong off)
+           (Long/parseLong iterations)
+           (-> volume Long/parseLong db->gain)))
   (shutdown-agents))
