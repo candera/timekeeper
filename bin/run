@@ -42,6 +42,14 @@ do
     esac
 done
 
-CP=`lein classpath`
+JARNAME=timekeeper-0.1.0-SNAPSHOT-standalone.jar
+JARPATH=`dirname $0`/$JARNAME
+
+if [[ ! -f $JARPATH ]]; then
+    echo "Compiling uberjar"
+    lein uberjar
+    cp target/$JARNAME $JARPATH
+fi
+
 echo "running with delay $DELAY, on for $ON, off for $OFF, $ITERATIONS iterations, volume ${VOLUME}dB"
-java -cp $CP clojure.main -m timekeeper.main $DELAY $ON $OFF $ITERATIONS $VOLUME
+java -jar $JARPATH $DELAY $ON $OFF $ITERATIONS $VOLUME
